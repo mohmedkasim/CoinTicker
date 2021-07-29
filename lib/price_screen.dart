@@ -8,7 +8,7 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
-  List<DropdownMenuItem> getDropdownItems() {
+  DropdownButton<String> getDropdownButton() {
     List<DropdownMenuItem<String>> values = [];
     for (String item in currenciesList) {
       values.add(new DropdownMenuItem(
@@ -16,15 +16,32 @@ class _PriceScreenState extends State<PriceScreen> {
         value: item,
       ));
     }
-    return values;
+
+    return DropdownButton<String>(
+      value: selectedCurrency,
+      items: values,
+      onChanged: (value) {
+        setState(() {
+          selectedCurrency = value;
+        });
+      },
+    );
   }
 
-  List<Widget> getCupertinoItems() {
+  CupertinoPicker getCupertinoButton() {
     List<Widget> items = [];
     for (String item in currenciesList) {
       items.add(new Text(item));
     }
-    return items;
+
+    return CupertinoPicker(
+      backgroundColor: Colors.lightBlue,
+      itemExtent: 32.0,
+      onSelectedItemChanged: (selectedIndex) {
+        print(selectedCurrency);
+      },
+      children: items,
+    );
   }
 
   String selectedCurrency = 'USD';
@@ -33,7 +50,6 @@ class _PriceScreenState extends State<PriceScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getDropdownItems();
   }
 
   @override
@@ -72,14 +88,7 @@ class _PriceScreenState extends State<PriceScreen> {
               alignment: Alignment.center,
               padding: EdgeInsets.only(bottom: 30.0),
               color: Colors.lightBlue,
-              child: CupertinoPicker(
-                backgroundColor: Colors.lightBlue,
-                itemExtent: 32.0,
-                onSelectedItemChanged: (selectedIndex) {
-                  print(selectedCurrency);
-                },
-                children: getCupertinoItems(),
-              )),
+              child: getDropdownButton()),
         ],
       ),
     );
